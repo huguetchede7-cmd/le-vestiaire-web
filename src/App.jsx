@@ -4,6 +4,10 @@ import { CartProvider } from './context/CartContext';
 import Catalogue from './pages/Catalogue';
 import ProduitDetail from './pages/ProduitDetail';
 import Panier from './pages/Panier';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Commander from './pages/Commander';
+import CommandeConfirmee from './pages/CommandeConfirmee';
 
 export default function App() {
   return (
@@ -14,6 +18,10 @@ export default function App() {
             <Route path="/" element={<Catalogue />} />
             <Route path="/produits/:id" element={<ProduitDetail />} />
             <Route path="/panier" element={<Panier />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/commander" element={<Commander />} />
+            <Route path="/commande-confirmee/:id" element={<CommandeConfirmee />} />
           </Routes>
         </CartProvider>
       </AuthProvider>
