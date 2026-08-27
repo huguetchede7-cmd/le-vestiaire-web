@@ -29,19 +29,22 @@ export default function Navbar() {
           </Link>
 
           {user ? (
-            <div className="flex items-center gap-4">
-              <Link to="/mes-commandes" className="hover:text-gray-300 text-sm">
-                Mes commandes
-              </Link>
-              <span className="text-sm text-gray-400">{user.name}</span>
-              <button
-                onClick={logout}
-                className="bg-red-600 hover:bg-red-700 text-sm px-3 py-1.5 rounded-md"
-              >
-                Deconnexion
-              </button>
-            </div>
-          ) : (
+  <div className="flex items-center gap-4">
+    <Link to="/mes-commandes" className="hover:text-gray-300 text-sm">
+      Mes commandes
+    </Link>
+    <Link to="/profil" className="text-sm text-gray-400 hover:text-white">
+      {user.name}
+    </Link>
+    <button
+      onClick={logout}
+      className="bg-red-600 hover:bg-red-700 text-sm px-3 py-1.5 rounded-md"
+    >
+      Deconnexion
+    </button>
+  </div>
+) : (
+  
             <Link
               to="/login"
               className="bg-blue-600 hover:bg-blue-700 text-sm px-4 py-1.5 rounded-md"

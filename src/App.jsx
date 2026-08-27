@@ -9,6 +9,7 @@ import Register from './pages/Register';
 import Commander from './pages/Commander';
 import CommandeConfirmee from './pages/CommandeConfirmee';
 import MesCommandes from './pages/MesCommandes';
+import Profil from './pages/Profil';
 
 export default function App() {
   return (
@@ -24,6 +25,7 @@ export default function App() {
             <Route path="/commander" element={<Commander />} />
             <Route path="/commande-confirmee/:id" element={<CommandeConfirmee />} />
             <Route path="/mes-commandes" element={<MesCommandes />} />
+            <Route path="/profil" element={<Profil />} />
           </Routes>
         </CartProvider>
       </AuthProvider>
