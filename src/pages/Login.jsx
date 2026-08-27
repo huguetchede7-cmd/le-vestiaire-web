@@ -18,7 +18,7 @@ export default function Login() {
 
     try {
       await login(email, password);
-      navigate('/panier');
+      navigate(-1);
     } catch (err) {
       setError('Email ou mot de passe incorrect.');
     } finally {
