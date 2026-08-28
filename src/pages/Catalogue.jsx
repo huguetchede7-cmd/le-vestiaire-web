@@ -8,13 +8,27 @@ export default function Catalogue() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
+  const [recherche, setRecherche] = useState('');
+  const [marque, setMarque] = useState('');
+
   useEffect(() => {
-    api
-      .get('/produits')
-      .then((res) => setProduits(res.data.data))
-      .catch(() => setError('Impossible de charger les produits.'))
-      .finally(() => setLoading(false));
-  }, []);
+    setLoading(true);
+    setError('');
+
+    const params = {};
+    if (recherche) params.recherche = recherche;
+    if (marque) params.marque = marque;
+
+    const timeout = setTimeout(() => {
+      api
+        .get('/produits', { params })
+        .then((res) => setProduits(res.data.data))
+        .catch(() => setError('Impossible de charger les produits.'))
+        .finally(() => setLoading(false));
+    }, 300); // debounce : evite un appel a chaque frappe
+
+    return () => clearTimeout(timeout);
+  }, [recherche, marque]);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -23,6 +37,27 @@ export default function Catalogue() {
       <main className="max-w-6xl mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-2">Nos maillots</h1>
         <p className="text-gray-600 mb-8">Portez vos couleurs avec fierte.</p>
+
+        <div className="flex flex-col sm:flex-row gap-4 mb-8">
+          <input
+            type="text"
+            placeholder="Rechercher un maillot..."
+            value={recherche}
+            onChange={(e) => setRecherche(e.target.value)}
+            className="flex-1 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+
+          <select
+            value={marque}
+            onChange={(e) => setMarque(e.target.value)}
+            className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="">Toutes les marques</option>
+            <option value="Nike">Nike</option>
+            <option value="Adidas">Adidas</option>
+            <option value="Puma">Puma</option>
+          </select>
+        </div>
 
         {loading && <p className="text-gray-500">Chargement...</p>}
         {error && <p className="text-red-600">{error}</p>}
@@ -60,7 +95,7 @@ export default function Catalogue() {
 
             {produits.length === 0 && (
               <p className="col-span-full text-center text-gray-500 py-12">
-                Aucun maillot disponible pour le moment.
+                Aucun maillot ne correspond a ta recherche.
               </p>
             )}
           </div>

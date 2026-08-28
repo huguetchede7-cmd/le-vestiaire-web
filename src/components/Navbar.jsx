@@ -1,10 +1,33 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
+import axios from '../api/axios';
 
 export default function Navbar() {
   const { user, logout } = useAuth();
   const { nombreArticles } = useCart();
+  const [notificationsNonLues, setNotificationsNonLues] = useState(0);
+
+  useEffect(() => {
+    if (user) {
+      chargerCompteurNotifications();
+    }
+
+    window.addEventListener('notifications-updated', chargerCompteurNotifications);
+    return () => {
+      window.removeEventListener('notifications-updated', chargerCompteurNotifications);
+    };
+  }, [user]);
+
+  const chargerCompteurNotifications = async () => {
+    try {
+      const response = await axios.get('/notifications/non-lues');
+      setNotificationsNonLues(response.data.count || 0);
+    } catch (err) {
+      // silencieux
+    }
+  };
 
   return (
     <header className="bg-gray-900 text-white sticky top-0 z-40">
@@ -29,22 +52,32 @@ export default function Navbar() {
           </Link>
 
           {user ? (
-  <div className="flex items-center gap-4">
-    <Link to="/mes-commandes" className="hover:text-gray-300 text-sm">
-      Mes commandes
-    </Link>
-    <Link to="/profil" className="text-sm text-gray-400 hover:text-white">
-      {user.name}
-    </Link>
-    <button
-      onClick={logout}
-      className="bg-red-600 hover:bg-red-700 text-sm px-3 py-1.5 rounded-md"
-    >
-      Deconnexion
-    </button>
-  </div>
-) : (
-  
+            <div className="flex items-center gap-4">
+              <Link to="/notifications" className="relative hover:text-gray-300 text-sm">
+                Notifications
+                {notificationsNonLues > 0 && (
+                  <span className="absolute -top-2 -right-4 bg-red-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                    {notificationsNonLues}
+                  </span>
+                )}
+              </Link>
+
+              <Link to="/mes-commandes" className="hover:text-gray-300 text-sm">
+                Mes commandes
+              </Link>
+
+              <Link to="/profil" className="text-sm text-gray-400 hover:text-white">
+                {user.name}
+              </Link>
+
+              <button
+                onClick={logout}
+                className="bg-red-600 hover:bg-red-700 text-sm px-3 py-1.5 rounded-md"
+              >
+                Deconnexion
+              </button>
+            </div>
+          ) : (
             <Link
               to="/login"
               className="bg-blue-600 hover:bg-blue-700 text-sm px-4 py-1.5 rounded-md"
